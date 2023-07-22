@@ -27,6 +27,9 @@ inputs:
   convert_prefix:
     required: false
     description: 'Include prefix (or not) on conversion. True by default'
+  override:
+    required: false
+    description: 'Override existing environment variables'
 runs:
   using: 'node16'
   main: 'dist/index.js'
