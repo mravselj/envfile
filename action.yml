@@ -1,5 +1,5 @@
-name: 'Export all secrets to .env file and environment variables'
-description: 'Utility action that exports all github secrets to a file and environment variables'
+name: 'Export all secrets to environment variables and write to file'
+description: 'Utility action that exports all github secrets environment variables and write to file. Useful for debugging and testing. It can also be used to export a subset of secrets or to convert secrets name to a specific string format. It can also be used to override existing'
 author: 'ThaiND'
 inputs:
   secrets:
