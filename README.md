@@ -1,12 +1,10 @@
-# secrets-to-env
+# secrets-to-dotenv
 
-<p align="center">
-  <a href="https://github.com/oNaiPs/secrets-to-env-action/actions"><img alt="secrets-to-env-action status" src="https://github.com/oNaiPs/secrets-to-env-action/workflows/build-test/badge.svg"></a>
-</p>
+This is a fork of [secrets-to-env-action](https://github.com/oNaiPs/secrets-to-env-action)
 
 This action provides the following functionality for GitHub Actions users:
 
-- Read Github secrets and export **all** of them as environment variables
+- Read Github secrets and export **all** of them as environment variables and write them to a file
 - Optionally including, excluding and manipulating variables as needed before importing
 
 <table>
@@ -75,11 +73,11 @@ Exclude defined secret(s) from list of secrets (comma separated, supports regex)
 
 ```yaml
 steps:
-- uses: actions/checkout@v3
-- uses: oNaiPs/secrets-to-env-action@v1
-  with:
-    secrets: ${{ toJSON(secrets) }}
-    exclude: MY_SECRET, MY_OTHER_SECRETS*
+  - uses: actions/checkout@v3
+  - uses: oNaiPs/secrets-to-env-action@v1
+    with:
+      secrets: ${{ toJSON(secrets) }}
+      exclude: MY_SECRET, MY_OTHER_SECRETS*
 # MY_SECRET is not exported
 ```
 
@@ -134,7 +132,7 @@ Value of MY_SECRET: DONT_OVERRIDE
 
 Converts all exported secrets according to a [template](https://github.com/blakeembrey/change-case#core).
 Available: `lower, upper, camel, constant, pascal, snake`.
-  
+
 ```yaml
 steps:
 - uses: actions/checkout@v3
@@ -149,14 +147,14 @@ steps:
 
 ```yaml
 steps:
-- uses: actions/checkout@v3
-- uses: oNaiPs/secrets-to-env-action@v1
-  with:
-    secrets: ${{ toJSON(secrets) }}
-    prefix: PREFIX_
-    convert: lower
-    convert_prefix: false
-- run: env
+  - uses: actions/checkout@v3
+  - uses: oNaiPs/secrets-to-env-action@v1
+    with:
+      secrets: ${{ toJSON(secrets) }}
+      prefix: PREFIX_
+      convert: lower
+      convert_prefix: false
+  - run: env
 # E.g. secret with MY_SECRET would become PREFIX_my_secret
 ```
 
@@ -167,9 +165,3 @@ This action uses the input in `secrets` to read all the secrets in the JSON form
 ## License
 
 The scripts and documentation in this project are released under the [MIT License](LICENSE)
-
-## Contributions
-
-Contributions are welcome! Past contributors:
-
-- Tamas Kadar @KTamas

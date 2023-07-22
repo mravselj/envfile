@@ -1,10 +1,17 @@
-name: 'Export all secrets to env variables'
-description: 'Utility action that exports all github secrets to environment variables'
-author: 'Jose Pereira @oNaiPs'
+name: 'Export all secrets to .env file and environment variables'
+description: 'Utility action that exports all github secrets to a file and environment variables'
+author: 'ThaiND'
 inputs:
   secrets:
     required: true
     description: JSON representation of the secrets, use provided placeholder'
+  file:
+    required: false
+    description: 'File to export secrets to, e.g.: .env, If not provided, will export to .env. If empty, will not export to file'
+    default: '.env'
+  no_env:
+    required: false
+    description: 'Do not export secrets to environment variables'
   prefix:
     required: false
     description: 'Prefix to add to all secrets, e.g.: SECRET_'
@@ -24,5 +31,5 @@ runs:
   using: 'node16'
   main: 'dist/index.js'
 branding:
-  icon: book-open
-  color: orange
+  icon: command
+  color: blue

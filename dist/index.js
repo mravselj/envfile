@@ -42,6 +42,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
 const camel_case_1 = __nccwpck_require__(638);
 const constant_case_1 = __nccwpck_require__(878);
+const fs_1 = __nccwpck_require__(147);
 const pascal_case_1 = __nccwpck_require__(995);
 const snake_case_1 = __nccwpck_require__(213);
 const convertTypes = {
@@ -59,19 +60,22 @@ function run() {
             'github_token'
         ];
         try {
-            const secretsJson = core.getInput('secrets', {
-                required: true
-            });
+            const secretsJson = core.getInput('secrets', { required: true });
+            const file = core.getInput('file');
+            const noEnvInput = core.getInput('no_env');
             const keyPrefix = core.getInput('prefix');
             const includeListStr = core.getInput('include');
             const excludeListStr = core.getInput('exclude');
             const convert = core.getInput('convert');
             const convertPrefixStr = core.getInput('convert_prefix');
+            const overrideStr = core.getInput('override');
             const convertPrefix = convertPrefixStr.length
                 ? convertPrefixStr === 'true'
                 : true;
-            const overrideStr = core.getInput('override');
             const override = overrideStr.length ? overrideStr === 'true' : true;
+            const noFile = !file.length;
+            const noEnv = noEnvInput.length ? noEnvInput === 'true' : false;
+            const convertFunc = convertTypes[convert];
             let secrets;
             try {
                 secrets = JSON.parse(secretsJson);
@@ -91,6 +95,7 @@ with:
             if (excludeListStr.length) {
                 excludeList = excludeList.concat(excludeListStr.split(',').map(key => key.trim()));
             }
+            let envFileContent = '';
             core.debug(`Using include list: ${includeList === null || includeList === void 0 ? void 0 : includeList.join(', ')}`);
             core.debug(`Using exclude list: ${excludeList.join(', ')}`);
             for (const key of Object.keys(secrets)) {
@@ -102,15 +107,19 @@ with:
                 }
                 let newKey = keyPrefix.length ? `${keyPrefix}${key}` : key;
                 if (convert.length) {
-                    if (!convertTypes[convert]) {
+                    if (!convertFunc) {
                         throw new Error(`Unknown convert value "${convert}". Available: ${Object.keys(convertTypes).join(', ')}`);
                     }
                     if (!convertPrefix) {
-                        newKey = `${keyPrefix}${convertTypes[convert](newKey.replace(keyPrefix, ''))}`;
+                        newKey = `${keyPrefix}${convertFunc(newKey.replace(keyPrefix, ''))}`;
                     }
                     else {
-                        newKey = convertTypes[convert](newKey);
+                        newKey = convertFunc(newKey);
                     }
+                }
+                envFileContent += `${newKey}=${secrets[key]}\n`;
+                if (noEnv) {
+                    continue;
                 }
                 if (process.env[newKey]) {
                     if (override) {
@@ -123,6 +132,13 @@ with:
                 }
                 core.exportVariable(newKey, secrets[key]);
                 core.info(`Exported secret ${newKey}`);
+            }
+            if (!noFile) {
+                core.info(`Writing to file: ${file}`);
+                (0, fs_1.writeFile)(file, envFileContent, err => {
+                    if (err)
+                        throw err;
+                });
             }
         }
         catch (error) {

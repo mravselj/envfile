@@ -1,7 +1,5 @@
-import * as cp from 'child_process'
-import * as path from 'path'
-import {expect, jest, test} from '@jest/globals'
 import * as core from '@actions/core'
+import {expect, jest} from '@jest/globals'
 import main from '../src/main'
 
 jest.mock('@actions/core')
@@ -16,7 +14,7 @@ function mockInputs(inputs: {[key: string]: string}) {
   jest.mocked(core.getInput).mockImplementation(s => inputs[s] || '')
 }
 
-describe('secrets-to-env-action', () => {
+describe('secrets-to-dotenv-action', () => {
   let inputSecrets: {[key: string]: string}
   let newSecrets: {[key: string]: string}
 
@@ -242,5 +240,15 @@ describe('secrets-to-env-action', () => {
     delete filteredNewSecrets.MY_SECRET_1
 
     expect(newSecrets).toEqual(filteredNewSecrets)
+  })
+
+  it('no_env', () => {
+    mockInputs({
+      secrets: JSON.stringify(inputSecrets),
+      no_env: 'true'
+    })
+    main()
+
+    expect(newSecrets).toEqual({})
   })
 })

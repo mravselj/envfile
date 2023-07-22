@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 
 import {camelCase} from 'camel-case'
 import {constantCase} from 'constant-case'
+import {writeFile} from 'fs'
 import {pascalCase} from 'pascal-case'
 import {snakeCase} from 'snake-case'
 
@@ -21,19 +22,23 @@ export default async function run(): Promise<void> {
   ]
 
   try {
-    const secretsJson: string = core.getInput('secrets', {
-      required: true
-    })
-    const keyPrefix: string = core.getInput('prefix')
-    const includeListStr: string = core.getInput('include')
-    const excludeListStr: string = core.getInput('exclude')
-    const convert: string = core.getInput('convert')
+    const secretsJson = core.getInput('secrets', {required: true})
+    const file = core.getInput('file')
+    const noEnvInput = core.getInput('no_env')
+    const keyPrefix = core.getInput('prefix')
+    const includeListStr = core.getInput('include')
+    const excludeListStr = core.getInput('exclude')
+    const convert = core.getInput('convert')
     const convertPrefixStr = core.getInput('convert_prefix')
+    const overrideStr = core.getInput('override')
+
     const convertPrefix = convertPrefixStr.length
       ? convertPrefixStr === 'true'
       : true
-    const overrideStr: string = core.getInput('override')
     const override = overrideStr.length ? overrideStr === 'true' : true
+    const noFile = !file.length
+    const noEnv = noEnvInput.length ? noEnvInput === 'true' : false
+    const convertFunc = convertTypes[convert]
 
     let secrets: Record<string, string>
     try {
@@ -58,6 +63,8 @@ with:
       )
     }
 
+    let envFileContent = ''
+
     core.debug(`Using include list: ${includeList?.join(', ')}`)
     core.debug(`Using exclude list: ${excludeList.join(', ')}`)
 
@@ -73,7 +80,7 @@ with:
       let newKey = keyPrefix.length ? `${keyPrefix}${key}` : key
 
       if (convert.length) {
-        if (!convertTypes[convert]) {
+        if (!convertFunc) {
           throw new Error(
             `Unknown convert value "${convert}". Available: ${Object.keys(
               convertTypes
@@ -82,12 +89,16 @@ with:
         }
 
         if (!convertPrefix) {
-          newKey = `${keyPrefix}${convertTypes[convert](
-            newKey.replace(keyPrefix, '')
-          )}`
+          newKey = `${keyPrefix}${convertFunc(newKey.replace(keyPrefix, ''))}`
         } else {
-          newKey = convertTypes[convert](newKey)
+          newKey = convertFunc(newKey)
         }
+      }
+
+      envFileContent += `${newKey}=${secrets[key]}\n`
+
+      if (noEnv) {
+        continue
       }
 
       if (process.env[newKey]) {
@@ -101,6 +112,13 @@ with:
 
       core.exportVariable(newKey, secrets[key])
       core.info(`Exported secret ${newKey}`)
+    }
+
+    if (!noFile) {
+      core.info(`Writing to file: ${file}`)
+      writeFile(file, envFileContent, err => {
+        if (err) throw err
+      })
     }
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
