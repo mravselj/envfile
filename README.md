@@ -1,6 +1,8 @@
 # secrets-to-dotenv
 
-This is a fork of [secrets-to-env-action](https://github.com/oNaiPs/secrets-to-env-action)
+[![e2e](https://github.com/thaind0/secrets-to-dotenv/actions/workflows/e2e.yml/badge.svg)](https://github.com/thaind0/secrets-to-dotenv/actions/workflows/e2e.yml)
+
+This is a fork of [secrets-to-env-action](https://github.com/oNaiPs/secrets-to-env)
 
 This action provides the following functionality for GitHub Actions users:
 
@@ -24,16 +26,17 @@ After
     MY_SECRET1: ${{ secrets.MY_SECRET1 }}
     MY_SECRET2: ${{ secrets.MY_SECRET2 }}
     MY_SECRET3: ${{ secrets.MY_SECRET3 }}
-    MY_SECRET4: ${{ secrets.MY_SECRET4 }}
-    MY_SECRET5: ${{ secrets.MY_SECRET5 }}
-    MY_SECRET6: ${{ secrets.MY_SECRET6 }}
+- run: |
+    echo "MY_SECRET1=${{ secrets.MY_SECRET1 }}" >> .env
+    echo "MY_SECRET2=${{ secrets.MY_SECRET2 }}" >> .env
+    echo "MY_SECRET3=${{ secrets.MY_SECRET3 }}" >> .env
     ...
 </pre>
 </td>
 
 <td>
 <pre>
-- uses: oNaiPs/secrets-to-env-action@v1
+- uses: thaind0/secrets-to-dotenv@v1
   with:
     secrets: ${{ toJSON(secrets) }}
 - run: echo "Value of MY_SECRET1: $MY_SECRET1"
@@ -48,7 +51,7 @@ After
 Add the following action to your workflow:
 
 ```yaml
-- uses: oNaiPs/secrets-to-env-action@v1
+- uses: thaind0/secrets-to-dotenv@v1
   with:
     secrets: ${{ toJSON(secrets) }}
 ```
@@ -61,10 +64,43 @@ Note the `secrets` key. It is **mandatory** so the action can read and export th
 ```yaml
 steps:
 - uses: actions/checkout@v3
-- uses: oNaiPs/secrets-to-env-action@v1
+- uses: thaind0/secrets-to-dotenv@v1
   with:
     secrets: ${{ toJSON(secrets) }}
 - run: echo "Value of MY_SECRET: $MY_SECRET"
+```
+
+**Custom file:**
+
+```yaml
+steps:
+  - uses: actions/checkout@v3
+  - uses: thaind0/secrets-to-dotenv@v1
+    with:
+      secrets: ${{ toJSON(secrets) }}
+      file: .prod.env
+```
+
+**No environment variables:**
+
+```yaml
+steps:
+  - uses: actions/checkout@v3
+  - uses: thaind0/secrets-to-dotenv@v1
+    with:
+      secrets: ${{ toJSON(secrets) }}
+      no_env: true
+```
+
+**No file:**
+
+```yaml
+steps:
+  - uses: actions/checkout@v3
+  - uses: thaind0/secrets-to-dotenv@v1
+    with:
+      secrets: ${{ toJSON(secrets) }}
+      file:
 ```
 
 **Include or exclude secrets:**
@@ -74,7 +110,7 @@ Exclude defined secret(s) from list of secrets (comma separated, supports regex)
 ```yaml
 steps:
   - uses: actions/checkout@v3
-  - uses: oNaiPs/secrets-to-env-action@v1
+  - uses: thaind0/secrets-to-dotenv@v1
     with:
       secrets: ${{ toJSON(secrets) }}
       exclude: MY_SECRET, MY_OTHER_SECRETS*
@@ -86,7 +122,7 @@ steps:
 ```yaml
 steps:
 - uses: actions/checkout@v3
-- uses: oNaiPs/secrets-to-env-action@v1
+- uses: thaind0/secrets-to-dotenv@v1
   with:
     secrets: ${{ toJSON(secrets) }}
     include: MY_SECRET, MY_OTHER_SECRETS*
@@ -104,7 +140,7 @@ Adds a prefix to all exported secrets.
 ```yaml
 steps:
 - uses: actions/checkout@v3
-- uses: oNaiPs/secrets-to-env-action@v1
+- uses: thaind0/secrets-to-dotenv@v1
   with:
     secrets: ${{ toJSON(secrets) }}
     prefix: PREFIXED_
@@ -120,7 +156,7 @@ env:
   MY_SECRET: DONT_OVERRIDE
 steps:
 - uses: actions/checkout@v3
-- uses: oNaiPs/secrets-to-env-action@v1
+- uses: thaind0/secrets-to-dotenv@v1
   with:
     secrets: ${{ toJSON(secrets) }}
     override: false
@@ -136,7 +172,7 @@ Available: `lower, upper, camel, constant, pascal, snake`.
 ```yaml
 steps:
 - uses: actions/checkout@v3
-- uses: oNaiPs/secrets-to-env-action@v1
+- uses: thaind0/secrets-to-dotenv@v1
   with:
     secrets: ${{ toJSON(secrets) }}
     convert: lower
@@ -148,7 +184,7 @@ steps:
 ```yaml
 steps:
   - uses: actions/checkout@v3
-  - uses: oNaiPs/secrets-to-env-action@v1
+  - uses: thaind0/secrets-to-dotenv@v1
     with:
       secrets: ${{ toJSON(secrets) }}
       prefix: PREFIX_
