@@ -106,7 +106,7 @@ jobs:
       - name: Export secrets to env variables (starts with, include)
         uses: ./
         with:
-          remove-prefix: SEC
+          remove_prefix: SEC
           secrets: ${{ toJSON(secrets) }}
       - name: Verify secrets to env variables (starts with, include)
         run: |
