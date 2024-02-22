@@ -195,6 +195,20 @@ describe('secrets-to-dotenv-action', () => {
     })
   })
 
+  it('does remove prefix', () => {
+    mockInputs({
+      secrets: JSON.stringify(inputSecrets),
+      include: 'MY_SECRET_1, MY_SECRET_2',
+      remove_prefix: 'MY_',
+    })
+    main()
+
+    expect(newSecrets).toEqual({
+      SECRET_1: inputSecrets.MY_SECRET_1,
+      SECRET_2: inputSecrets.MY_SECRET_2
+    })
+  })
+
   it('does not convert prefix', () => {
     mockInputs({
       secrets: JSON.stringify(inputSecrets),

@@ -30,11 +30,13 @@ export default async function run(): Promise<void> {
     const excludeListStr = core.getInput('exclude')
     const convert = core.getInput('convert')
     const convertPrefixStr = core.getInput('convert_prefix')
+    const removePrefixStr = core.getInput('remove_prefix')
     const overrideStr = core.getInput('override')
 
     const convertPrefix = convertPrefixStr.length
       ? convertPrefixStr === 'true'
       : true
+    const removePrefix = removePrefixStr.length > 0
     const override = overrideStr.length ? overrideStr === 'true' : true
     const noFile = !file.length
     const noEnv = noEnvInput.length ? noEnvInput === 'true' : false
@@ -79,6 +81,11 @@ with:
 
       let newKey = keyPrefix.length ? `${keyPrefix}${key}` : key
 
+      // remove is done before convert
+      if (removePrefix) {
+        newKey = newKey.replace(removePrefixStr, '')        
+      }
+
       if (convert.length) {
         if (!convertFunc) {
           throw new Error(
@@ -92,7 +99,7 @@ with:
           newKey = `${keyPrefix}${convertFunc(newKey.replace(keyPrefix, ''))}`
         } else {
           newKey = convertFunc(newKey)
-        }
+        }        
       }
 
       envFileContent += `${newKey}=${secrets[key]}\n`

@@ -1,6 +1,6 @@
 name: 'Export all secrets to environment variables and write to file'
 description: 'Utility action that exports all github secrets environment variables and write to file.'
-author: 'ThaiND'
+author: 'mravselj'
 inputs:
   secrets:
     required: true
@@ -27,6 +27,9 @@ inputs:
   convert_prefix:
     required: false
     description: 'Include prefix (or not) on conversion. True by default'
+  remove_prefix:
+    required: false
+    description: 'If specified all variables that start with remove_prefix are trimmed. Empty by default'
   override:
     required: false
     description: 'Override existing environment variables'

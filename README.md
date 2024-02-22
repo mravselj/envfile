@@ -2,12 +2,13 @@
 
 [![e2e](https://github.com/thaind0/envfile/actions/workflows/e2e.yml/badge.svg)](https://github.com/thaind0/envfile/actions/workflows/e2e.yml)
 
-This is a fork of [secrets-to-env-action](https://github.com/oNaiPs/secrets-to-env)
+This is a fork of [secrets-to-env-action](https://github.com/thaind0/envfile)
 
 This action provides the following functionality for GitHub Actions users:
 
 - Read Github secrets and export **all** of them as environment variables and write them to a file
 - Optionally including, excluding and manipulating variables as needed before importing
+- Additionally enable option to remove secrets prefix before exporting to env and .env
 
 <table>
 <tr>
@@ -192,6 +193,21 @@ steps:
       convert_prefix: false
   - run: env
 # E.g. secret with MY_SECRET would become PREFIX_my_secret
+```
+
+**Remove the prefix on conversion (default is true):**
+
+```yaml
+steps:
+  - uses: actions/checkout@v3
+  - uses: thaind0/envfile@v1
+    with:
+      secrets: ${{ toJSON(secrets) }}
+      include: PREFIX_*
+      remove_prefix: PREFIX_
+      convert_prefix: false
+  - run: env
+# E.g. secret with PREFIX_MY_SECRET would be exported as MY_SECRET
 ```
 
 ## How it works
