@@ -1,4 +1,4 @@
-name: 'Export all secrets to environment variables and write to file'
+name: 'Secrets to env'
 description: 'Utility action that exports all github secrets environment variables and write to file.'
 author: 'mravselj'
 inputs:
@@ -29,7 +29,7 @@ inputs:
     description: 'Include prefix (or not) on conversion. True by default'
   remove_prefix:
     required: false
-    description: 'If specified all variables that start with remove_prefix are trimmed. Empty by default'
+    description: 'Removes specified prefix from all variables. Useful for DEV_ STG_, PROD_ prefixes. Empty by default'  
   override:
     required: false
     description: 'Override existing environment variables'

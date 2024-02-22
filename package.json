@@ -1,5 +1,5 @@
 {
-  "name": "secrets-to-dotenv",
+  "name": "secrets-to-dotenv2",
   "version": "1.0",
   "private": true,
   "description": "Export your GitHub Actions secrets to environment variables and .env file",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thaind0/secrets-to-dotenv-action.git"
+    "url": "git+https://github.com/mravselj/secrets-to-dotenv2-action.git"
   },
   "keywords": [
     "actions",

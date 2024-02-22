@@ -14,7 +14,7 @@ function mockInputs(inputs: {[key: string]: string}) {
   jest.mocked(core.getInput).mockImplementation(s => inputs[s] || '')
 }
 
-describe('secrets-to-dotenv-action', () => {
+describe('secrets-to-dotenv2-action', () => {
   let inputSecrets: {[key: string]: string}
   let newSecrets: {[key: string]: string}
 

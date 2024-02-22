@@ -78,7 +78,7 @@ jobs:
           [[ "${Secret_2}" != "VALUE_2" ]] && echo "Could not export Secret_2 secret, value is ${Secret_2}" && exit 1
           [[ "${Secret_3}" != "VALUE_3" ]] && echo "Could not export Secret_3 secret, value is ${Secret_3}" && exit 1
           true
-        shell: bash
+        shell: bash 
 
   test-convert-prefix:
     runs-on: ubuntu-latest
