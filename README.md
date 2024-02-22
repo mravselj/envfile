@@ -203,9 +203,9 @@ steps:
   - uses: mravselj/envfile@v1
     with:
       secrets: ${{ toJSON(secrets) }}
-      remove_prefix: PREFIX_      
+      remove_prefix: DEVELOPMENT_      
   - run: env
-# E.g. secret with PREFIX_MY_SECRET would be exported as MY_SECRET
+# E.g. secret with DEVELOPMENT_MY_SECRET would be exported as MY_SECRET
 ```
 
 ## How it works
