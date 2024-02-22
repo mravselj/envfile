@@ -1,4 +1,4 @@
-name: 'Secrets to env'
+name: 'secrets-to-dotenv2'
 description: 'Utility action that exports all github secrets environment variables and write to file.'
 author: 'mravselj'
 inputs:
