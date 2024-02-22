@@ -199,7 +199,7 @@ describe('secrets-to-dotenv-action', () => {
     mockInputs({
       secrets: JSON.stringify(inputSecrets),
       include: 'MY_SECRET_1, MY_SECRET_2',
-      remove_prefix: 'MY_',
+      remove_prefix: 'MY_'
     })
     main()
 

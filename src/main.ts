@@ -83,7 +83,7 @@ with:
 
       // remove is done before convert
       if (removePrefix) {
-        newKey = newKey.replace(removePrefixStr, '')        
+        newKey = newKey.replace(removePrefixStr, '')
       }
 
       if (convert.length) {
@@ -99,7 +99,7 @@ with:
           newKey = `${keyPrefix}${convertFunc(newKey.replace(keyPrefix, ''))}`
         } else {
           newKey = convertFunc(newKey)
-        }        
+        }
       }
 
       envFileContent += `${newKey}=${secrets[key]}\n`
