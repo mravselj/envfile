@@ -195,7 +195,7 @@ steps:
 # E.g. secret with MY_SECRET would become PREFIX_my_secret
 ```
 
-**Remove the prefix on conversion (default is true):**
+**Remove the prefix(before conversion):**
 
 ```yaml
 steps:
@@ -203,9 +203,7 @@ steps:
   - uses: mravselj/envfile@v1
     with:
       secrets: ${{ toJSON(secrets) }}
-      include: PREFIX_*
-      remove_prefix: PREFIX_
-      convert_prefix: false
+      remove_prefix: PREFIX_      
   - run: env
 # E.g. secret with PREFIX_MY_SECRET would be exported as MY_SECRET
 ```
