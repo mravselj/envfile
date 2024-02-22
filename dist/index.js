@@ -108,9 +108,8 @@ with:
                     continue;
                 }
                 let newKey = keyPrefix.length ? `${keyPrefix}${key}` : key;
-                // remove is done before convert
-                if (removePrefix) {
-                    newKey = newKey.replace(removePrefixStr, '');
+                if (removePrefix && newKey.startsWith(removePrefixStr)) {
+                    newKey = newKey.substring(removePrefixStr.length);
                 }
                 if (convert.length) {
                     if (!convertFunc) {
